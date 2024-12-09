@@ -45,3 +45,8 @@ export const SignupFormSchema = z.object({
       .min(1, { message: "Provide a password to authenticate." })
   });
   
+  export enum Role {
+    ADMIN = "ADMIN",
+    EDITOR = "EDITOR",
+    USER = "USER",
+  }
