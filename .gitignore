@@ -40,6 +40,8 @@ build/Release
 
 # Dependency directories
 node_modules/
+apps/api/node_modules/
+apps/web/node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
