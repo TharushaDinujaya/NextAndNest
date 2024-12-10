@@ -17,7 +17,7 @@ const SignupForm = () => {
               
         <div>
           <Label htmlFor="name">Name</Label>
-          <Input id="name" name="name" placeholder="John Doe" />
+          <Input id="name" name="name" placeholder="Tharusha Dinujaya" />
         </div>
 
         {state?.error?.name && 
@@ -26,7 +26,7 @@ const SignupForm = () => {
 
         <div>
           <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" placeholder="john@example.com" />
+          <Input id="email" name="email" placeholder="tharusha@example.com" />
         </div>
 
         {state?.error?.email && 

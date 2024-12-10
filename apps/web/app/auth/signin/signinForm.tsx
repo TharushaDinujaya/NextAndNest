@@ -19,7 +19,7 @@ const SignInForm = () => {
           <Input
             id="email"
             name="email"
-            placeholder="m@example.com"
+            placeholder="tharusha@example.com"
             type="email"
           />
         </div>
