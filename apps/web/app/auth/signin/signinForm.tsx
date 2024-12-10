@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import SubmitButton from "@/components/ui/SubmitButton";
+import SubmitButton from "@/components/ui/submitButton";
 import { signIn } from "@/lib/auth";
 import Link from "next/link";
 import React, { useActionState } from "react";
