@@ -2,12 +2,11 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import SubmitButton from '@/components/ui/submitButton'
-import React from 'react'
-import { useFormState } from 'react-dom'
+import React, {useActionState} from 'react'
 import { signUp } from "@/lib/auth"
 
 const SignupForm = () => {
-    const [state, action] = useFormState( signUp, undefined)
+    const [state, action] = useActionState( signUp, undefined)
 
   return (
     <form action={action}>
