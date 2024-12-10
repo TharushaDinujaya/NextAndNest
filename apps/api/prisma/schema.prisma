@@ -39,14 +39,15 @@ model profileInfo {
 }
 
 model users {
-  id            Int             @id @default(autoincrement())
-  name          String          @db.VarChar(255)
-  email         String          @unique @db.VarChar(255)
-  password      String          @db.VarChar(255)
-  comments      comments[]
-  posts         posts[]
-  profileInfo   profileInfo?
-  usersToGroups usersToGroups[]
+  id                 Int             @id @default(autoincrement())
+  name               String          @db.VarChar(255)
+  email              String          @unique @db.VarChar(255)
+  password           String          @db.VarChar(255)
+  hashedRefreshToken String?
+  comments           comments[]
+  posts              posts[]
+  profileInfo        profileInfo?
+  usersToGroups      usersToGroups[]
 }
 
 model usersToGroups {

@@ -1,4 +1,4 @@
-import {  Body,  Controller, Post, UseGuards, Request, Get, Res } from '@nestjs/common';
+import {  Body,  Controller, Post, UseGuards, Request, Get, Res, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
@@ -44,4 +44,9 @@ export class AuthController {
     res.redirect(`http://localhost:3000/api/auth/google/callback?userId=${resopnse.id}&name=${resopnse.name}&accessToken=${resopnse.accessToken}&refreshToken=${resopnse.refreshToken}`,);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('signout')
+  signOut(@Req() req) {
+    return this.authService.signOut(req.user.id);
+  }
 }

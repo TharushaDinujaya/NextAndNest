@@ -38,6 +38,9 @@ import {
   
     async login(userId: number, name: string) {
       const { accessToken, refreshToken } = await this.generateTokens(userId);
+      const hashedRT = await hash(refreshToken);
+
+      await this.userService.updateHashedRefreshToken(userId, hashedRT);
       return {
         id: userId,
         name: name,
@@ -65,15 +68,21 @@ import {
       return currentUser;
     }
     
-    async validateRefreshToken(userId:number){
+    async validateRefreshToken(userId:number, refreshToken: string) {
         const user = await this.userService.findOne(userId);
         if (!user) throw new UnauthorizedException('User not found!');
+
+        const refreshTokenMatched = await verify(user.hashedRefreshToken, refreshToken);
+        if(!refreshTokenMatched) throw new UnauthorizedException('Invalid Refresh Token!');
+
         const currentUser = { id: user.id };
         return currentUser;
     }
 
     async refreshToken(userId: number, name: string) {
         const { accessToken, refreshToken } = await this.generateTokens(userId);
+        const hashedRT = await hash(refreshToken);
+        await this.userService.updateHashedRefreshToken(userId, hashedRT);
         return {
           id: userId,
           name: name,
@@ -86,5 +95,9 @@ import {
         const user = await this.userService.findByEmail(googleUser.email);
         if (user) return user;
         return await this.userService.create(googleUser);
+      }
+
+      async signOut(userId: number) {
+        return await this.userService.updateHashedRefreshToken(userId, null);
       }
 }
