@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createSession } from "./session";
+import { createSession, updateTokens } from "./session";
 import { BACKEND_URL } from "./constants";
 import { FormState, LoginFormSchema, SignupFormSchema} from "./type";
 
@@ -31,7 +31,7 @@ export async function signUp(
       body: JSON.stringify(validationFields.data),
     }
   );
-  if (response.ok) {
+  if (response.status === 201) {
     redirect("/auth/signin");
   } else
     return {
@@ -89,3 +89,44 @@ export async function signIn(
     };
   }
 }
+
+export const refreshToken = async ( oldRefreshToken: string) => {
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/auth/refresh`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          refresh: oldRefreshToken,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Failed to refresh token"
+      );
+    }
+
+    const { accessToken, refreshToken } = await response.json();
+    
+    const updateRes = await fetch("http://localhost:3000/api/auth/update",{
+      method: "POST",
+      body: JSON.stringify({
+        accessToken,
+        refreshToken,
+      })
+    })
+    if(!updateRes.ok){
+      throw new Error("Failed to update tokens !");
+    }
+    return accessToken;
+
+  } catch (error) {
+    console.log("Failed to refresh token !", error);
+    return null;
+  }
+};

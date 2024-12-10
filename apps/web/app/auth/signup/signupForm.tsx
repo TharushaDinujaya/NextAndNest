@@ -1,13 +1,12 @@
 "use client";
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import SubmitButton from '@/components/ui/SubmitButton'
-import React from 'react'
-import { useFormState } from 'react-dom'
+import SubmitButton from '@/components/ui/submitButton'
+import React, {useActionState} from 'react'
 import { signUp } from "@/lib/auth"
 
 const SignupForm = () => {
-    const [state, action] = useFormState( signUp, undefined)
+    const [state, action] = useActionState( signUp, undefined)
 
   return (
     <form action={action}>
@@ -18,7 +17,7 @@ const SignupForm = () => {
               
         <div>
           <Label htmlFor="name">Name</Label>
-          <Input id="name" name="name" placeholder="John Doe" />
+          <Input id="name" name="name" placeholder="Tharusha Dinujaya" />
         </div>
 
         {state?.error?.name && 
@@ -27,7 +26,7 @@ const SignupForm = () => {
 
         <div>
           <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" placeholder="john@example.com" />
+          <Input id="email" name="email" placeholder="tharusha@example.com" />
         </div>
 
         {state?.error?.email && 
