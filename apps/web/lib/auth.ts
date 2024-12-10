@@ -1,13 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { createSession } from "./session";
 import { BACKEND_URL } from "./constants";
-import {
-  FormState,
-  LoginFormSchema,
-  SignupFormSchema,
-} from "./type";
-import { createSession} from "./session";
+import { FormState, LoginFormSchema, SignupFormSchema} from "./type";
 
 export async function signUp(
   state: FormState,
@@ -74,8 +70,6 @@ export async function signIn(
 
   if (response.ok) {
     const result = await response.json();
-    // TODO: Create The Session For Authenticated User.
-
     await createSession({
       user: {
         id: result.id,

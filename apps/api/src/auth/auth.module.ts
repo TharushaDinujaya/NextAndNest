@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import jwtConfig from './config/jwt.config';
 import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.stretegy';
+import { RefreshStrategy } from './strategies/refresh.token.strategy';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { JwtStrategy } from './strategies/jwt.stretegy';
     UserService, 
     PrismaService, 
     LocalStrategy,
-    JwtStrategy
+    JwtStrategy,
+    RefreshStrategy
   ],
 })
 export class AuthModule {}
