@@ -1,25 +1,14 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  Request,
-  Res,
-  SetMetadata,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Request, Res, UseGuards} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
-import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
-import { Response } from 'express';
 import { Public } from './decorators/public.decorator';
 import { Roles } from './decorators/roles.decorator';
-import { RolesGuard } from './guards/roles/roles.guard';
+import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
+import { Response } from 'express';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -39,7 +28,7 @@ export class AuthController {
   @Get('protected')
   getAll(@Request() req) {
     return {
-      messege: `Now you can access this protected API. Requested ID is ${req.user.id}`,
+      messege: `Now you can access this protected API. this is your user ID: ${req.user.id}`,
     };
   }
 
@@ -55,7 +44,7 @@ export class AuthController {
   @Get('google/login')
   googleLogin() {}
 
-  @Public()
+  @Public() 
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
   async googleCallback(@Request() req, @Res() res: Response) {

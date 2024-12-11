@@ -22,7 +22,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh-jwt') {
       passReqToCallback: true,
     });
   }
-  // request.user
+  
   validate(req: Request, payload: AuthJwtPayload) {
     const userId = payload.sub;
     const refreshToken = req.body.refresh;

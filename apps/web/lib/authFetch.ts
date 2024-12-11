@@ -1,30 +1,37 @@
-
-import { getSession } from "./session";
 import { refreshToken } from "./auth";
+import { getSession } from "./session";
 
-export interface FetchOptions extends RequestInit{
-    headers?: Record<string, string>;
+export interface FetchOptions extends RequestInit {
+  headers?: Record<string, string>;
 }
 
-export const authFetch = async(url:string | URL, options: FetchOptions = {}) => {
-    const session = await getSession();
+export const authFetch = async (
+  url: string | URL,
+  options: FetchOptions = {}
+) => {
+  const session = await getSession();
 
-    options.headers = {
-        ...options.headers,
-        Authorization: `Bearer ${session?.accessToken}`,
+  options.headers = {
+    ...options.headers,
+    Authorization: `Bearer ${session?.accessToken}`,
+  };
+  let response = await fetch(url, options);
+  console.log({
+    Status: response.status,
+  });
+
+  if (response.status === 401) {
+    if (!session?.refreshToken)
+      throw new Error("refresh token not found!");
+
+    const newAccessToken = await refreshToken(
+      session.refreshToken
+    );
+
+    if (newAccessToken) {
+      options.headers.Authorization = `Bearer ${newAccessToken}`;
+      response = await fetch(url, options);
     }
-    let response = await fetch(url, options);
-
-    if(response.status == 401){
-        if(!session?.refreshToken){
-            throw new Error("No refresh token available");
-        }
-
-        const newAccessToken = await refreshToken(session.refreshToken);
-        if(newAccessToken){
-            options.headers.Authorization = `Bearer ${newAccessToken}`;
-            response = await fetch(url, options);
-        }
-    }
-    return response;
-}
+  }
+  return response;
+};

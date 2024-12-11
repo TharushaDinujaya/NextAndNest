@@ -3,43 +3,43 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LocalStrategy } from './strategies/local.stretagy';
 import { JwtModule } from '@nestjs/jwt';
 import jwtConfig from './config/jwt.config';
 import { ConfigModule } from '@nestjs/config';
+import refreshConfig from './config/refresh.config';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
+import { RolesGuard } from './guards/roles/roles.guard';
+import googleOauthConfig from './config/google.oauth.config';
+import { LocalStrategy } from './strategies/local.stretagy';
 import { JwtStrategy } from './strategies/jwt.stretegy';
 import { RefreshStrategy } from './strategies/refresh.token.strategy';
-import refreshConfig from './config/refresh.config';
-import googleOauthConfig from './config/google.oauth.config';
-import { GoogleStrategy } from './strategies/google.strategy';
-import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './guards/roles/roles.guard';
 
 @Module({
   imports: [
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(refreshConfig),
-    ConfigModule.forFeature(googleOauthConfig)
+    ConfigModule.forFeature(googleOauthConfig),
   ],
   controllers: [AuthController],
   providers: [
-    AuthService, 
-    UserService, 
-    PrismaService, 
+    AuthService,
+    UserService,
+    PrismaService,
     LocalStrategy,
     JwtStrategy,
     RefreshStrategy,
     GoogleStrategy,
     {
-      provide:APP_GUARD,
+      provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
     {
-      provide:APP_GUARD,
+      provide: APP_GUARD,
       useClass: RolesGuard,
-    }
+    },
   ],
 })
 export class AuthModule {}

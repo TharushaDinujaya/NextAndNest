@@ -10,7 +10,7 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     const { password, ...user } = createUserDto;
     const hashedPassword = await hash(password);
-    return await this.prisma.users.create({
+    return await this.prisma.user.create({
       data: {
         password: hashedPassword,
         ...user,
@@ -19,7 +19,7 @@ export class UserService {
   }
 
   async findByEmail(email: string) {
-    return await this.prisma.users.findUnique({
+    return await this.prisma.user.findUnique({
       where: {
         email,
       },
@@ -27,7 +27,7 @@ export class UserService {
   }
 
   async findOne(userId: number) {
-    return await this.prisma.users.findUnique({
+    return await this.prisma.user.findUnique({
       where: {
         id: userId,
       },
@@ -35,7 +35,7 @@ export class UserService {
   }
 
   async updateHashedRefreshToken(userId: number, hashedRT: string | null) {
-    return await this.prisma.users.update({
+    return await this.prisma.user.update({
       where: {
         id: userId,
       },
