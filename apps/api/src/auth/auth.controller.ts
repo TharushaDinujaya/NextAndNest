@@ -7,6 +7,8 @@ import { Public } from './decorators/public.decorator';
 import { Roles } from './decorators/roles.decorator';
 import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 import { Response } from 'express';
+import { RolesGuard } from './guards/roles/roles.guard';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Public()
 @Controller('auth')
@@ -26,10 +28,8 @@ export class AuthController {
 
   @Roles('ADMIN', 'EDITOR')
   @Get('protected')
-  getAll(@Request() req) {
-    return {
-      messege: `Now you can access this protected API. this is your user ID: ${req.user.id}`,
-    };
+  getAll(@Request() req){
+    return {message:`Now you can acess this route. This is your ID:${req.user.id}`};
   }
 
   @Public()
