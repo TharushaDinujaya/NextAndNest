@@ -1,19 +1,19 @@
-import { Body, Controller, Get, Post, Req, Request, Res, UseGuards} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Request, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
-import { Public } from './decorators/public.decorator';
-import { Roles } from './decorators/roles.decorator';
 import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 import { Response } from 'express';
-import { RolesGuard } from './guards/roles/roles.guard';
+import { Public } from './decorators/public.decorator';
+import { Roles } from './decorators/roles.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
-@Public()
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+  @Public()
   @Post('signup')
   registerUser(@Body() createUserDto: CreateUserDto) {
     return this.authService.registerUser(createUserDto);
@@ -28,8 +28,10 @@ export class AuthController {
 
   @Roles('ADMIN', 'EDITOR')
   @Get('protected')
-  getAll(@Request() req){
-    return {message:`Now you can acess this route. This is your ID:${req.user.id}`};
+  getAll(@Request() req) {
+    return {
+      messege: `Now you can access this protected API. this is your user ID: ${req.user.id}`,
+    };
   }
 
   @Public()
@@ -44,10 +46,11 @@ export class AuthController {
   @Get('google/login')
   googleLogin() {}
 
-  @Public() 
+  @Public()
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
   async googleCallback(@Request() req, @Res() res: Response) {
+    // console.log('Google User', req.user);
     const resopnse = await this.authService.login(
       req.user.id,
       req.user.name,
