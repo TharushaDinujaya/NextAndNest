@@ -30,7 +30,6 @@ export async function createSession(payload: Session) {
     .setExpirationTime("7d")
     .sign(encodedKey);
 
-    
   (await cookies()).set("session", session, {
     httpOnly: true,
     secure: true,
@@ -55,22 +54,31 @@ export async function getSession() {
 
     return payload as Session;
   } catch (err) {
-    console.error("Failed to validate the session", err);
+    console.error("Failed to verify the session", err);
     redirect("/auth/sigin");
   }
 }
 
 export async function deleteSession() {
-  (await cookies()).delete("session");
+   (await cookies()).delete("session");
 }
 
-export async function updateTokens({ accessToken, refreshToken}: { accessToken: string; refreshToken: string;}) {
+export async function updateTokens({
+  accessToken,
+  refreshToken,
+}: {
+  accessToken: string;
+  refreshToken: string;
+}) {
   const cookie = (await cookies()).get("session")?.value;
   if (!cookie) return null;
 
-  const { payload } = await jwtVerify<Session>( cookie, encodedKey );
+  const { payload } = await jwtVerify<Session>(
+    cookie,
+    encodedKey
+  );
 
-  if (!payload) throw new Error("Session Invalid!");
+  if (!payload) throw new Error("Session not found");
 
   const newPayload: Session = {
     user: {
@@ -80,5 +88,4 @@ export async function updateTokens({ accessToken, refreshToken}: { accessToken: 
     refreshToken,
   };
 
-  await createSession(newPayload);
-}
+  await createSession(newPayload);}
